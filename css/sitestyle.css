@@ -1,0 +1,32 @@
+.container {background-color:#CCFFFF;opacity:.9}
+body {background-color:#CCFFFF; color:black;}
+a {
+	color:blue; 
+}
+a:hover, a:visited, a:link, a:active {
+	text-decoration: none;
+}
+h1 {
+	color:black;
+}
+form {
+	color:black;
+}
+form {
+    width: 80%;
+    margin: 0 auto;
+}
+
+label, input {
+    display: inline-block;
+}
+
+label {
+    width: 30%;
+    text-align: right;
+}
+
+label + input {
+    width: 30%;
+    margin: 0 30% 0 4%;
+}
