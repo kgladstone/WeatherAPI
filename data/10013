@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<time>2015-06-11T12:08:31.765</time>
+<weather>
+<town>New York</town>
+<state>NY</state>
+<zip>10013</zip>
+<temp>84</temp>
+<sky>Clear</sky>
+<rain>0.00</rain>
+<humidity>51</humidity>
+</weather>
+</response>

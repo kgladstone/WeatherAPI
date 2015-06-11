@@ -55,7 +55,7 @@ public class Weather
         LocalDateTime now = LocalDateTime.now(); // grab current time
 
         if(!f.exists()) // Need new data because input file does not exist
-            WeatherScrape scraper = new WeatherScrape(zip);
+            {WeatherScrape scraper = new WeatherScrape(zip);}
 
         /*
          * Read XML file
@@ -84,6 +84,9 @@ public class Weather
          */
         String location = getTown(xmlText) + ", " + getState(xmlText); 
         double temp = Double.parseDouble(getTemperature(xmlText));
+        double feel = Double.parseDouble(getFeel(xmlText));
+        double humidity = Double.parseDouble(getHumidity(xmlText));
+
         String sky = getSky(xmlText);
         
         /*
@@ -101,6 +104,8 @@ public class Weather
          */
         StdOut.println("Weather for " + location);
         StdOut.println("Current Temperature is: " + temp + " degrees Fahrenheit");
+        StdOut.println("Feels like: " + feel + " degrees Fahrenheit");
+        StdOut.println("Humidity: " + humidity);
         StdOut.println("Sky is " + sky);
         StdOut.println("Rain is " + rainVal + " in.");
         StdOut.print("Consider wearing: ");
@@ -200,6 +205,25 @@ public class Weather
         return xmlText.substring(start, end);
     }
     
+    /***************************************************************/
+    /* Extract feel temperature from HTML meta-data                */
+    /***************************************************************/
+    public static String getFeel(String xmlText)
+    {
+        int start = xmlText.indexOf("<feel>") + 6;
+        int end = xmlText.indexOf("</feel>");
+        return xmlText.substring(start, end);
+    }
+
+    /***************************************************************/
+    /* Extract humidity from HTML meta-data                     */
+    /***************************************************************/
+    public static String getHumidity(String xmlText)
+    {
+        int start = xmlText.indexOf("<humidity>") + 10;
+        int end = xmlText.indexOf("</humidity>");
+        return xmlText.substring(start, end);
+    }
     /***************************************************************/
     /* Extract rain from HTML meta-data                            */
     /***************************************************************/

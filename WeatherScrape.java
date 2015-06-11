@@ -35,8 +35,8 @@ public class WeatherScrape {
     /***************************************************************/
 	public WeatherScrape(String zip)
 	{        
-        String name = "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=";
-        In in = new In(name + zip);
+        String URL = "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=";
+        In in = new In(URL + zip);
         LocalDateTime now = LocalDateTime.now();
         String data = in.readAll(); // scrape HTML site
 
@@ -44,11 +44,14 @@ public class WeatherScrape {
          * Get HTML Data from input
          */
         String headString = getHeader(data);
-        String town = getTown(headString); // UPDATE location
+        String town = getTown(headString); 
         String state = getState(headString);
         String temp = getTemperature(headString);
         String sky = getSky(headString);
         String rain = getRain(data);
+        String humidity = getHumidity(data);
+        String feel = getFeel(data);
+
 
         // Send data to a file named by the zip code
         File file = new File("data/" + zip);
@@ -64,8 +67,10 @@ public class WeatherScrape {
             printWriter.println("<state>" + state + "</state>");
             printWriter.println("<zip>" + zip + "</zip>");
             printWriter.println("<temp>" + temp + "</temp>");
+            printWriter.println("<feel>" + feel + "</feel>");
             printWriter.println("<sky>" + sky + "</sky>");
             printWriter.println("<rain>" + rain + "</rain>");
+            printWriter.println("<humidity>" + humidity + "</humidity>");
             printWriter.println("</weather>");
             printWriter.println("</response>");
             printWriter.close();       
@@ -165,8 +170,21 @@ public class WeatherScrape {
         int endRainTag = text.indexOf("</span>", rainTag);
         return text.substring(midRainTag + 10, endRainTag);        
     }
+
+    private String getHumidity(String text)
+    {
+        int tag = text.indexOf("\"humidity\":") + 11;
+        int end = text.indexOf(",", tag);
+        return text.substring(tag, end);
+    }
     
-    /***************************************************************/
+
+    private String getFeel(String text)
+    {
+        int tag = text.indexOf("\"feelslike\":") + 12;
+        int end = text.indexOf(",", tag);
+        return text.substring(tag, end);
+    }    /***************************************************************/
     /* Allow for command-line usage                                */
     /***************************************************************/
 	public static void main(String[] args) 
