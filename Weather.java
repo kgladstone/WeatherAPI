@@ -49,10 +49,10 @@ public class Weather
          * Handle commandline arguments
          */
 
-        String filename = args[0]; // weather input filename
         String zip = "08540";
-        if (args.length > 1)
-            zip = args[1]; // set zip code to second argument on run
+        if (args != null && args.length > 0)
+            zip = args[0]; // set zip code to argument on run
+        String filename = "data/" + zip;
 
         /*
          * Read weather data from saved file
@@ -64,6 +64,7 @@ public class Weather
 
         if(!f.exists()) // Need new data because input file does not exist
         { 
+            //StdOut.println("File didn't exist");
             text = getNewData(zip); // PERFORM A SCRAPE
             headString = getHeader(text);
             location = getLocation(headString); // UPDATE location
@@ -78,6 +79,7 @@ public class Weather
             // Capture the timestamp and print it
             String thenStr = text.substring(0, htmlStart - 1);
             LocalDateTime then = LocalDateTime.parse(thenStr);
+            //StdOut.println("That timestamp was: " + then);
 
             /*
              * Markers for parsing the input file

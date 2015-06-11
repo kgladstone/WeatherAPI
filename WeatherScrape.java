@@ -25,6 +25,10 @@
  * Schenectady, NY : 12345 // for interesting zip code
  ***************************************************************/
 import java.time.LocalDateTime;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
+
 public class WeatherScrape {
 	private String data; // weather data
 	private LocalDateTime now; // time of capture
@@ -38,6 +42,22 @@ public class WeatherScrape {
 
         now = LocalDateTime.now();
         data = in.readAll(); // scrape HTML site
+
+        // Send data to a file named by the zip code
+        File file = new File("data/" + zip);
+        try
+        {
+            PrintWriter printWriter = new PrintWriter(file);
+            // Output the following
+            printWriter.println(now);
+            printWriter.println(data);
+            printWriter.close();       
+        }
+        catch (FileNotFoundException ex)  
+        {
+
+            System.out.println("Error: FileNotFoundException");// insert code to run when exception occurs
+        }
 	}
 
 	public String getData()
@@ -60,9 +80,5 @@ public class WeatherScrape {
             zip = args[0]; // set zip code to first argument on run
 
         WeatherScrape scraper = new WeatherScrape(zip); // run scraper
-
-        // Output the following
-        StdOut.println(scraper.getTimeOfCapture());
-        StdOut.println(scraper.getData());
     }
 }
