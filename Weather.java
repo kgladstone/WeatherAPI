@@ -54,63 +54,52 @@ public class Weather
             zip = args[0]; // set zip code to argument on run
         String filename = "data/" + zip;
 
+        /***************************************************************/
+
         /*
          * Read weather data from saved file
          */
         File f = new File(filename);
-        String headString;
-        String location;
-        String text;
+        String xmlText;
 
         if(!f.exists()) // Need new data because input file does not exist
         { 
             //StdOut.println("File didn't exist");
-            text = getNewData(zip); // PERFORM A SCRAPE
-            headString = getHeader(text);
-            location = getLocation(headString); // UPDATE location
+            WeatherScrape scraper = new WeatherScrape(zip);
         }
 
-        else // Input file exists
+        In in = new In(filename);
+        xmlText = in.readAll(); // GET DATA FROM EXISTING FILE
+
+        // Capture the timestamp and print it
+        String thenStr = getTime(xmlText);
+        LocalDateTime then = LocalDateTime.parse(thenStr);
+        //StdOut.println("That timestamp was: " + then);
+
+        String thatZip = getZip(xmlText); // Parse zip code of input data
+
+
+        /*
+        * Refresh the weather data if necessary (mismatched location OR data too old)
+        */
+        if (!thatZip.equals(zip) || now.minusMinutes(CHRONINTERVAL).compareTo(then) > 0) // if at least XXX time later
         {
-            In in = new In(filename);
-            text = in.readAll(); // GET DATA FROM EXISTING FILE
-            int htmlStart = text.indexOf("\n<!DOCTYPE html>");
-
-            // Capture the timestamp and print it
-            String thenStr = text.substring(0, htmlStart - 1);
-            LocalDateTime then = LocalDateTime.parse(thenStr);
-            //StdOut.println("That timestamp was: " + then);
-
-            /*
-             * Markers for parsing the input file
-            */
-            headString = getHeader(text);
-
-            location = getLocation(headString); // Parse geographical location of input data
-            String thatZip = getZip(headString); // Parse zip code of input data
-
-
-            /*
-            * Refresh the weather data if necessary (mismatched location OR data too old)
-            */
-            if (!thatZip.equals(zip) || now.minusMinutes(CHRONINTERVAL).compareTo(then) > 0) // if at least XXX time later
-            {
-                text = getNewData(zip); // PERFORM A SCRAPE
-                headString = getHeader(text);
-                location = getLocation(headString); // UPDATE location
-            }
-        }
+            WeatherScrape scraper = new WeatherScrape(zip);
+        } 
+        
+        /***************************************************************/
 
         /*
          * Get HTML Data from input
          */
-        double temp = getTemperature(headString);
-        String sky = getSky(headString);
+        String location = getTown(xmlText) + ", " + getState(xmlText); // UPDATE location
+        double temp = Double.parseDouble(getTemperature(xmlText));
+        String sky = getSky(xmlText);
         
         /*
          * Deal with rain variable
          */
-        Double rainVal = getRain(text);
+        Double rainVal = Double.parseDouble(getRain(xmlText));
         boolean rain;
         if (rainVal == 0)
             rain = false;
@@ -146,102 +135,72 @@ public class Weather
     /* Analysis methods                                                      */
     /*-----------------------------------------------------------------------*/
 
-
-    /***************************************************************/
-    /* Returns the head portion of the HTML string                 */
-    /***************************************************************/
-    public static String getHeader(String text)
+    public static String getTime(String xmlText)
     {
-        // Return the <head>
-        int startHead = text.indexOf("<head>");
-        int endHead = text.indexOf("</head>");
-        return text.substring(startHead, endHead);
-
-    }
-
-
-    /***************************************************************/
-    /* Performs another scrape and returns the full HTML text      */
-    /***************************************************************/
-    public static String getNewData(String zip)
-    {
-        WeatherScrape scraper = new WeatherScrape(zip);
-
-        String text = scraper.getData();
-        //StdOut.println("FILE outdated or different location...\n\tnew data captured at " 
-        //+ scraper.getTimeOfCapture());
-        return text;
-    }
-
-    /***************************************************************/
-    /* Break down an HTML head into the relevant                   */
-    /* line for data extraction: a certain line of meta-data       */
-    /***************************************************************/
-    public static String subInfo(String info)
-    {
-        String left = "<meta property=\"og:title\" content=";
-        String right = "/>";
-        int index1 = info.indexOf(left) + left.length();
-        int index2 = info.indexOf(right, index1);
-        
-        return info.substring(index1, index2);
+        int start = xmlText.indexOf("<time>") + 6;
+        int end = xmlText.indexOf("</time>");
+        return xmlText.substring(start, end);
     }
     
+
     /***************************************************************/
     /* Extract sky from HTML meta-data                             */
     /***************************************************************/
-    public static String getSky(String info)
+    public static String getSky(String xmlText)
     {
-        String subInfo = subInfo(info);
-        int partition1 = subInfo.indexOf("|");
-        int partition2 = subInfo.indexOf("|", partition1 + 1);
-        return subInfo.substring(partition2 + 2, subInfo.length() - 2);
+        int start = xmlText.indexOf("<sky>") + 5;
+        int end = xmlText.indexOf("</sky>");
+        return xmlText.substring(start, end);
     }
     
     /***************************************************************/
-    /* Extract location from HTML meta-data                        */
+    /* Extract town from HTML meta-data                            */
     /***************************************************************/
-    public static String getLocation(String info)
+    public static String getTown(String xmlText)
     {
-        String subInfo = subInfo(info);
-        int partition1 = subInfo.indexOf("|");
-        int partition2 = subInfo.indexOf("|", partition1 + 1);
-        return subInfo.substring(1, partition1);
+        int start = xmlText.indexOf("<town>") + 6;
+        int end = xmlText.indexOf("</town>");
+        return xmlText.substring(start, end);
     }
+
+    /***************************************************************/
+    /* Extract state from HTML meta-data                           */
+    /***************************************************************/
+    public static String getState(String xmlText)
+    {
+        int start = xmlText.indexOf("<state>") + 7;
+        int end = xmlText.indexOf("</state>");
+        return xmlText.substring(start, end);
+    }
+
     /***************************************************************/
     /* Extract location from HTML meta-data                        */
     /***************************************************************/
-    public static String getZip(String info)
+    public static String getZip(String xmlText)
     {
-        int partition1 = info.indexOf("(");
-        int partition2 = info.indexOf(")", partition1 + 1);
-        return info.substring(partition1 + 1, partition2);
+        int start = xmlText.indexOf("<zip>") + 5;
+        int end = xmlText.indexOf("</zip>");
+        return xmlText.substring(start, end);
     }
     
     /***************************************************************/
     /* Extract temperature from HTML meta-data                     */
     /***************************************************************/
-    public static double getTemperature(String info)
+     public static String getTemperature(String xmlText)
     {
-        
-        String subInfo = subInfo(info);
-        int partition1 = subInfo.indexOf("|");
-        int partition2 = subInfo.indexOf("|", partition1 + 1);
-        String temperature = subInfo.substring(partition1 + 2, subInfo.indexOf("&"));
-        return Double.parseDouble(temperature);
+        int start = xmlText.indexOf("<temp>") + 6;
+        int end = xmlText.indexOf("</temp>");
+        return xmlText.substring(start, end);
     }
     
     /***************************************************************/
     /* Extract rain from HTML meta-data                            */
     /***************************************************************/
-    public static double getRain(String text)
+     public static String getRain(String xmlText)
     {
-        int rainTag = text.indexOf("precip_today");
-        int midRainTag = text.indexOf("wx-value", rainTag);
-        int endRainTag = text.indexOf("</span>", rainTag);
-        String rainStr = text.substring(midRainTag + 10, endRainTag);
-        
-        return Double.parseDouble(rainStr);
+        int start = xmlText.indexOf("<rain>") + 6;
+        int end = xmlText.indexOf("</rain>");
+        return xmlText.substring(start, end);
     }
     
     /***************************************************************/
