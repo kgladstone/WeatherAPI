@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<time>2015-06-11T11:50:21.638</time>
+<weather>
+<town>Princeton</town>
+<state>NJ</state>
+<zip>08540</zip>
+<temp>87.2</temp>
+<sky>Clear</sky>
+<rain>0.00</rain>
+</weather>
+</response>

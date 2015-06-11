@@ -30,8 +30,6 @@ import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 
 public class WeatherScrape {
-	private String data; // weather data
-	private LocalDateTime now; // time of capture
     /***************************************************************/
     /* Run the weather scraper on a given zip code                 */
     /***************************************************************/
@@ -39,12 +37,8 @@ public class WeatherScrape {
 	{        
         String name = "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=";
         In in = new In(name + zip);
-
-        now = LocalDateTime.now();
-        data = in.readAll(); // scrape HTML site
-
-
-        /* Process data */
+        LocalDateTime now = LocalDateTime.now();
+        String data = in.readAll(); // scrape HTML site
 
         /*
          * Get HTML Data from input
@@ -56,10 +50,6 @@ public class WeatherScrape {
         String sky = getSky(headString);
         String rain = getRain(data);
 
-        /*
-         * Deal with rain variable
-         */
-
         // Send data to a file named by the zip code
         File file = new File("data/" + zip);
         try
@@ -67,6 +57,7 @@ public class WeatherScrape {
             PrintWriter printWriter = new PrintWriter(file);
             // Output the following
             printWriter.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            printWriter.println("<response>");
             printWriter.println("<time>" + now + "</time>");
             printWriter.println("<weather>");
             printWriter.println("<town>" + town + "</town>");
@@ -76,31 +67,19 @@ public class WeatherScrape {
             printWriter.println("<sky>" + sky + "</sky>");
             printWriter.println("<rain>" + rain + "</rain>");
             printWriter.println("</weather>");
+            printWriter.println("</response>");
             printWriter.close();       
         }
         catch (FileNotFoundException ex)  
         {
-
-            System.out.println("Error: FileNotFoundException");// insert code to run when exception occurs
+            System.out.println("FileNotFoundException: Error in creating file");
         }
 	}
-
-	public String getData()
-	{
-		return data;
-	}
-
-	public LocalDateTime getTimeOfCapture()
-	{
-		return now;
-	}
-
-
 
     /***************************************************************/
     /* Returns the head portion of the HTML string                 */
     /***************************************************************/
-    public String getHeader(String text)
+    private String getHeader(String text)
     {
         // Return the <head>
         int startHead = text.indexOf("<head>");
@@ -113,7 +92,7 @@ public class WeatherScrape {
     /* Break down an HTML head into the relevant                   */
     /* line for data extraction: a certain line of meta-data       */
     /***************************************************************/
-    public String subInfo(String info)
+    private String subInfo(String info)
     {
         String left = "<meta property=\"og:title\" content=";
         String right = "/>";
@@ -126,7 +105,7 @@ public class WeatherScrape {
      /***************************************************************/
     /* Extract sky from HTML meta-data                             */
     /***************************************************************/
-    public String getSky(String info)
+    private String getSky(String info)
     {
         String subInfo = subInfo(info);
         int partition1 = subInfo.indexOf("|");
@@ -137,7 +116,7 @@ public class WeatherScrape {
     /***************************************************************/
     /* Extract town from HTML meta-data                            */
     /***************************************************************/
-    public String getTown(String info)
+    private String getTown(String info)
     {
         String subInfo = subInfo(info);
         int partition1 = subInfo.indexOf(",");
@@ -147,7 +126,7 @@ public class WeatherScrape {
     /***************************************************************/
     /* Extract location from HTML meta-data                        */
     /***************************************************************/
-    public String getState(String info)
+    private String getState(String info)
     {
         String subInfo = subInfo(info);
         int partition1 = subInfo.indexOf(",");
@@ -157,7 +136,7 @@ public class WeatherScrape {
     /***************************************************************/
     /* Extract location from HTML meta-data                        */
     /***************************************************************/
-    public String getZip(String info)
+    private String getZip(String info)
     {
         int partition1 = info.indexOf("(");
         int partition2 = info.indexOf(")", partition1 + 1);
@@ -167,7 +146,7 @@ public class WeatherScrape {
     /***************************************************************/
     /* Extract temperature from HTML meta-data                     */
     /***************************************************************/
-    public String getTemperature(String info)
+    private String getTemperature(String info)
     {
         
         String subInfo = subInfo(info);
@@ -179,7 +158,7 @@ public class WeatherScrape {
     /***************************************************************/
     /* Extract rain from HTML meta-data                            */
     /***************************************************************/
-    public String getRain(String text)
+    private String getRain(String text)
     {
         int rainTag = text.indexOf("precip_today");
         int midRainTag = text.indexOf("wx-value", rainTag);
