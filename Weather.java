@@ -1,9 +1,18 @@
 /***************************************************************
- * What-To-Wear
+ * Attire Decider Weather Analyzer
  * By: Keith Gladstone (keithag@princeton.edu)
- * Created in April 2015
+ * Created in June 2015
  * 
- * Sample zip codes to test with as first argument
+ * This program takes advantage of the archiving ability of the
+ * scraper. Namely, it can pull scraped data from a stored file
+ * with a timestamp before deciding to pull data again from the Internet.
+ * This method conserves API calls and reduces traffic, allowing for
+ * rapid testing at no risk of disturbing the data source.
+ * 
+ * Requires Java Version 8
+ * Assume that if input file exists, it is formatted correctly.
+ *
+ * Sample zip codes to test with 
  * 
  * Princeton : 08540    // for testing normal
  * Seattle   : 98101    // for testing rain
@@ -13,6 +22,8 @@
  * Lahaina, HI : 96761  // for testing different time of day
  * Schenectady, NY : 12345 // for interesting zip code
  ***************************************************************/
+import java.time.LocalDateTime;
+import java.io.File;
 public class Weather
 {
     /***************************************************************/
@@ -21,6 +32,8 @@ public class Weather
     /***************************************************************/
     public static void main(String[] args)
     {
+        final int CHRONINTERVAL = 30; // tolerance for age of input data, in minutes
+
         /*
          * Pre-determined user temperature preferences
          */
@@ -30,31 +43,66 @@ public class Weather
         final int COLD = 35;
         final int FREEZING = 15;
         
-        String zip = "08540"; // default zip code
+        LocalDateTime now = LocalDateTime.now(); // grab current time
         
-        if (args != null && args.length > 0)
-            zip = args[0];
-          
-        // Exceeding Daily Limits
-        //String geoURL = "http://www.zip-info.com/cgi-local/zipsrch.exe?ll=ll&zip=";
-        //In geoIn = new In(geoURL + zip);
-        //String geoText = geoIn.readAll();
-        //String latitude = getLatitude(geoText);
-        //String longitude = getLongitude(geoText);
-        
-        
-        String name = "http://www.wunderground.com/cgi-bin/findweather/getForecast?query=";
-        In in = new In(name + zip);
-        String text = in.readAll(); // scrape HTML site
-        int startHead = text.indexOf("<head>");
-        int endHead = text.indexOf("</head>");
-        String headString = text.substring(startHead, endHead);
-      
         /*
-         * Get HTML Data
+         * Handle commandline arguments
+         */
+
+        String filename = args[0]; // weather input filename
+        String zip = "08540";
+        if (args.length > 1)
+            zip = args[1]; // set zip code to second argument on run
+
+        /*
+         * Read weather data from saved file
+         */
+        File f = new File(filename);
+        String headString;
+        String location;
+        String text;
+
+        if(!f.exists()) // Need new data because input file does not exist
+        { 
+            text = getNewData(zip); // PERFORM A SCRAPE
+            headString = getHeader(text);
+            location = getLocation(headString); // UPDATE location
+        }
+
+        else // Input file exists
+        {
+            In in = new In(filename);
+            text = in.readAll(); // GET DATA FROM EXISTING FILE
+            int htmlStart = text.indexOf("\n<!DOCTYPE html>");
+
+            // Capture the timestamp and print it
+            String thenStr = text.substring(0, htmlStart - 1);
+            LocalDateTime then = LocalDateTime.parse(thenStr);
+
+            /*
+             * Markers for parsing the input file
+            */
+            headString = getHeader(text);
+
+            location = getLocation(headString); // Parse geographical location of input data
+            String thatZip = getZip(headString); // Parse zip code of input data
+
+
+            /*
+            * Refresh the weather data if necessary (mismatched location OR data too old)
+            */
+            if (!thatZip.equals(zip) || now.minusMinutes(CHRONINTERVAL).compareTo(then) > 0) // if at least XXX time later
+            {
+                text = getNewData(zip); // PERFORM A SCRAPE
+                headString = getHeader(text);
+                location = getLocation(headString); // UPDATE location
+            }
+        }
+
+        /*
+         * Get HTML Data from input
          */
         double temp = getTemperature(headString);
-        String location = getLocation(headString);
         String sky = getSky(headString);
         
         /*
@@ -67,13 +115,10 @@ public class Weather
         else
             rain = true;
        
-
         /*
          * Output collected HTML data
          */
         StdOut.println("Weather for " + location);
-        //StdOut.println("Latitude is " + latitude);  
-        //StdOut.println("Longitude is " + longitude);
         StdOut.println("Current Temperature is: " + temp + " degrees Fahrenheit");
         StdOut.println("Sky is " + sky);
         StdOut.println("Rain is " + rainVal + " in.");
@@ -82,6 +127,7 @@ public class Weather
         
         /*
          * Output temperature analysis
+         * This section needs to be catered to user preferences in the next version
          */
 
         tempAnalysis(temp, HOT, WARM, COOL, COLD, FREEZING);
@@ -92,47 +138,42 @@ public class Weather
             StdOut.println("Bring sunglasses");
     }
     
-    public static String getLatitude(String geoText)
+
+
+    /*-----------------------------------------------------------------------*/
+    /* Analysis methods                                                      */
+    /*-----------------------------------------------------------------------*/
+
+
+    /***************************************************************/
+    /* Returns the head portion of the HTML string                 */
+    /***************************************************************/
+    public static String getHeader(String text)
     {
-        String tbl1 = "Mailing";
-        String tbl2 = "</table>";
-        StdOut.println(geoText);
-        int i1 = geoText.indexOf(tbl1);
-        int i2 = geoText.indexOf(tbl2, i1);
-        String table = geoText.substring(i1, i2);
-        
-        String td = "<td align=center>";
-        String td2 = "</font>";
-        int iTown = table.indexOf(td);
-        int iState = table.indexOf(td, iTown + 1);
-        int iZip = table.indexOf(td, iState + 1);
-        int iLat = table.indexOf(td, iZip + 1);
-        int iLong = table.indexOf(td, iLat + 1);
-        
-        return table.substring(iLat + td.length(), table.indexOf(td2, iLat));
+        // Return the <head>
+        int startHead = text.indexOf("<head>");
+        int endHead = text.indexOf("</head>");
+        return text.substring(startHead, endHead);
+
     }
-    public static String getLongitude(String geoText)
+
+
+    /***************************************************************/
+    /* Performs another scrape and returns the full HTML text      */
+    /***************************************************************/
+    public static String getNewData(String zip)
     {
-        String tbl1 = "Mailing";
-        String tbl2 = "</table>";
-        int i1 = geoText.indexOf(tbl1);
-        int i2 = geoText.indexOf(tbl2, i1);
-        String table = geoText.substring(i1, i2);
-        
-        String td = "<td align=center>";
-        String td2 = "</font>";
-        int iTown = table.indexOf(td);
-        int iState = table.indexOf(td, iTown + 1);
-        int iZip = table.indexOf(td, iState + 1);
-        int iLat = table.indexOf(td, iZip + 1);
-        int iLong = table.indexOf(td, iLat + 1);
-        
-        return table.substring(iLong + td.length(), table.indexOf(td2, iLong));
+        WeatherScrape scraper = new WeatherScrape(zip);
+
+        String text = scraper.getData();
+        //StdOut.println("FILE outdated or different location...\n\tnew data captured at " 
+        //+ scraper.getTimeOfCapture());
+        return text;
     }
-    
+
     /***************************************************************/
     /* Break down an HTML head into the relevant                   */
-    /* line for data extraction                                    */
+    /* line for data extraction: a certain line of meta-data       */
     /***************************************************************/
     public static String subInfo(String info)
     {
@@ -165,6 +206,15 @@ public class Weather
         int partition2 = subInfo.indexOf("|", partition1 + 1);
         return subInfo.substring(1, partition1);
     }
+    /***************************************************************/
+    /* Extract location from HTML meta-data                        */
+    /***************************************************************/
+    public static String getZip(String info)
+    {
+        int partition1 = info.indexOf("(");
+        int partition2 = info.indexOf(")", partition1 + 1);
+        return info.substring(partition1 + 1, partition2);
+    }
     
     /***************************************************************/
     /* Extract temperature from HTML meta-data                     */
@@ -179,6 +229,9 @@ public class Weather
         return Double.parseDouble(temperature);
     }
     
+    /***************************************************************/
+    /* Extract rain from HTML meta-data                            */
+    /***************************************************************/
     public static double getRain(String text)
     {
         int rainTag = text.indexOf("precip_today");

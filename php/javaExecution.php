@@ -6,7 +6,7 @@ $input = $_GET['zip'];
 #echo $input;
 echo shell_exec('cd ..');
 #echo $input;
-$output = shell_exec('java Weather '.$input); 
+$output = shell_exec('java Weather data.txt '.$input); 
 
 // Replace degrees with symbol
 $output = str_replace("degrees", "&#176", $output);
