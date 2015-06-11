@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<time>2015-06-11T12:26:48.157</time>
+<weather>
+<town>Bridgewater</town>
+<state>NJ</state>
+<zip>08807</zip>
+<temp>92.7</temp>
+<feel> 99</feel>
+<sky>Clear</sky>
+<rain>0.00</rain>
+<humidity>48</humidity>
+</weather>
+</response>

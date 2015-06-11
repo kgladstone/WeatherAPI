@@ -15,7 +15,7 @@
 
 
     <form action="index.php" method="get">
-        Zip Code: <input type="text" name="zip"><br><br>
+        <?php echo 'Zip Code: <input type="text" name="zip" value="'.$_GET['zip'].'"><br><br>'; ?>
         <button class="btn btn-block btn-primary" style="width:30%;position:relative;left:350px" type="submit">Go</button>
     </form>
     <hr>

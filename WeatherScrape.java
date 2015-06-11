@@ -9,9 +9,6 @@
  * as the main weather analyzer checks the timestamp and
  * determines whether or not to pull new data itself.
  *
- * Use "> [filename]" in the commandline to output
- * the data to [filename] with a timestamp prefix in the text.
- *
  * Requires Java Version 8
  *
  * Sample zip codes to test with as first argument

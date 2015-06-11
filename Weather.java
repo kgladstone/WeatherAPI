@@ -105,7 +105,7 @@ public class Weather
         StdOut.println("Weather for " + location);
         StdOut.println("Current Temperature is: " + temp + " degrees Fahrenheit");
         StdOut.println("Feels like: " + feel + " degrees Fahrenheit");
-        StdOut.println("Humidity: " + humidity);
+        StdOut.println("Humidity: " + humidity + "%");
         StdOut.println("Sky is " + sky);
         StdOut.println("Rain is " + rainVal + " in.");
         StdOut.print("Consider wearing: ");
