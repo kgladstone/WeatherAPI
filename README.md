@@ -1,13 +1,9 @@
 # AttireDecider
 Weather Analyzer
 
-Using webscraped weather data, app tells user what to wear.  
+Using webscraped weather data, app tells user what to wear. Makes use a separate scraper file that would be run on a server at certain predetermined intervals, and the main analyzer file checks the timestamp of the scraped data file before deciding to scrape from the Internet again -- conserving API calls.
 
 Goals: use machine learning to adjust to user’s optimal temperature preferences. 
 
-Inspired by idea conceived by Keith Gladstone, Vlad Feinberg, and Carole Touma
-at HackPrinceton Fall 2013. The first version was in the form of an iOS app, built
-on an Objective-C platform. This version has been resurrected from scratch by Keith
-in April 2015, and is destined to become a web application, on a stack that includes
-Java and PHP.
+
 
