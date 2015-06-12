@@ -66,6 +66,21 @@ zip = "08540" # default zip code if no argument
 if len(sys.argv) > 1:
 	zip = sys.argv[1]
 
+# Update subjective weather preferences
+if len(sys.argv) > 3:
+    COLD = float(sys.argv[2])
+    WARM = float(sys.argv[3])
+    COOL = (WARM + COLD) / 2
+    FREEZING = COLD - 0.5*(COOL - COLD)
+    HOT = WARM + 0.5*(WARM - COOL)
+    print("Custom Temperature Preferences:")
+    print("Hot:     \t" + str(HOT))
+    print("Warm:    \t" + str(WARM))
+    print("Cool:    \t" + str(COOL))
+    print("Cold:    \t" + str(COLD))
+    print("Freezing:\t" + str(FREEZING))
+
+
 filename = "data/" + zip
 now = datetime.datetime.now()
 
@@ -75,8 +90,6 @@ if os.path.isfile(filename) == False:
 with open(filename) as f:
     xmlText = f.read()
 
-
-#then = datetime(getTime(xmlText))
 then = datetime.datetime.strptime(get(xmlText, "time"), "%Y-%m-%dT%H:%M:%S.%f")
 thatZip = get(xmlText, "zip")
 
