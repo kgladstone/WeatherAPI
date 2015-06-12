@@ -94,7 +94,7 @@ with open(filename) as f:
 then = datetime.datetime.strptime(get(xmlText, "time"), "%Y-%m-%dT%H:%M:%S.%f")
 thatZip = get(xmlText, "zip")
 
-#  Refresh the weather data if necessary (mismatched location OR data too old)
+# Refresh the weather data if necessary (mismatched location OR data too old)
 diff = now - then 
 if (thatZip != zip or (diff.seconds / 60) > CHRONINTERVAL):
 	os.system("python WeatherScrape.py " + zip)

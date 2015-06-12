@@ -20,10 +20,7 @@
 <!-- JQuery Plugin-->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>	
 <!-- Bootstrap Javascript-->
-<script type="text/javascript" src="../js/bootstrap.js"></script>
-<!-- Other Functions-->
-<script type="text/javascript" src="../js/functions.js"></script>
-		
+<script type="text/javascript" src="js/bootstrap.js"></script>		
 
 <!-- Custom styles for this template -->
 <link href="css/starter-template.css" rel="stylesheet">

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <response>
-<time>2015-06-11T23:25:31.514287</time>
+<time>2015-06-12T15:11:06.126434</time>
 <weather>
 <town>New York</town>
 <state>NY</state>
 <zip>10013</zip>
-<temp>85</temp>
-<feel>88</feel>
-<sky>Partly Cloudy</sky>
+<temp>86</temp>
+<feel>91</feel>
+<sky>Clear</sky>
 <rain>0.00</rain>
-<humidity>55</humidity>
+<humidity>59</humidity>
 </weather>
 </response>

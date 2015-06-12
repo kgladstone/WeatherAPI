@@ -36,7 +36,7 @@
 	<!-- Insert footer -->
 	<ul style="list-style-type: none; position:relative; left:-20px;">
 	<li><a href="about.php"> About Attire Decider (Coming Soon)</a></li>
-	<li>Developed at Princeton University, 2015</li>
+	<li>June 2015</li>
     <li><a href="data">View Data Files</a></li>
 	</ul>
 </div>
