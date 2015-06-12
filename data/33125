@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<time>2015-06-12T09:41:01.708361</time>
+<weather>
+<town>Miami</town>
+<state>FL</state>
+<zip>33125</zip>
+<temp>82.4</temp>
+<feel>90</feel>
+<sky>Mostly Cloudy</sky>
+<rain>0.00</rain>
+<humidity>79</humidity>
+</weather>
+</response>

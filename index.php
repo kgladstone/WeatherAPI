@@ -16,6 +16,9 @@
 
     <form action="index.php" method="get">
         <?php echo 'Zip Code: <input type="text" name="zip" value="'.$_GET['zip'].'"><br><br>'; ?>
+        <?php echo 'What temperature do you consider warm? <input type="text" name="warm" value="'.$_GET['warm'].'">&#176F<br><br>'; ?>
+        <?php echo 'What temperature do you consider cold? <input type="text" name="cold" value="'.$_GET['cold'].'">&#176F<br><br>'; ?>
+
         <button class="btn btn-block btn-primary" style="width:30%;position:relative;left:350px" type="submit">Go</button>
     </form>
     <hr>

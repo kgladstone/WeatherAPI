@@ -68,17 +68,18 @@ if len(sys.argv) > 1:
 
 # Update subjective weather preferences
 if len(sys.argv) > 3:
-    COLD = float(sys.argv[2])
-    WARM = float(sys.argv[3])
-    COOL = (WARM + COLD) / 2
-    FREEZING = COLD - 0.5*(COOL - COLD)
-    HOT = WARM + 0.5*(WARM - COOL)
-    print("Custom Temperature Preferences:")
-    print("Hot:     \t" + str(HOT))
-    print("Warm:    \t" + str(WARM))
-    print("Cool:    \t" + str(COOL))
-    print("Cold:    \t" + str(COLD))
-    print("Freezing:\t" + str(FREEZING))
+    if float(sys.argv[2]) <= float(sys.argv[3]):
+        COLD = float(sys.argv[2])
+        WARM = float(sys.argv[3])
+        COOL = (WARM + COLD) / 2
+        FREEZING = COLD - 0.5*(COOL - COLD)
+        HOT = WARM + 0.5*(WARM - COOL)
+        # print("Custom Temperature Preferences:")
+        # print("Hot:     \t" + str(HOT))
+        # print("Warm:    \t" + str(WARM))
+        # print("Cool:    \t" + str(COOL))
+        # print("Cold:    \t" + str(COLD))
+        # print("Freezing:\t" + str(FREEZING))
 
 
 filename = "data/" + zip
@@ -119,7 +120,7 @@ print("Humidity: " + str(humidity) + "%")
 print("Sky is " + sky)
 print("Rain is " + str(rainVal) + " in.")
 print("Consider wearing: ")
-tempAnalysis(temp, HOT, WARM, COOL, COLD, FREEZING)
+tempAnalysis(feel, HOT, WARM, COOL, COLD, FREEZING) # calculate based on feel
 
 if rain:
 	print("Bring an umbrella\n")
