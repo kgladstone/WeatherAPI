@@ -19,9 +19,9 @@
         <button class="btn btn-block btn-primary" style="width:30%;position:relative;left:350px" type="submit">Go</button>
     </form>
     <hr>
-    <!-- The content: java output -->
-	<?php include("php/javaExecution.php");?>
-    <!-- End content: java output -->
+    <!-- The content: python output -->
+	<?php include("php/pyExec.php");?>
+    <!-- End content: python output -->
     <hr>
     <div style="clear:both">
 
@@ -34,6 +34,7 @@
 	<ul style="list-style-type: none; position:relative; left:-20px;">
 	<li><a href="about.php"> About Attire Decider (Coming Soon)</a></li>
 	<li>Developed at Princeton University, 2015</li>
+    <li><a href="data">View Data Files</a></li>
 	</ul>
 </div>
 </body> 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <response>
-<time>2015-06-11T12:10:06.753</time>
+<time>2015-06-11T23:10:42.688607</time>
 <weather>
 <town>Princeton</town>
 <state>NJ</state>
 <zip>08540</zip>
-<temp>87.1</temp>
-<feel> 92</feel>
-<sky>Clear</sky>
+<temp>82.3</temp>
+<feel>86</feel>
+<sky>Partly Cloudy</sky>
 <rain>0.00</rain>
-<humidity>56</humidity>
+<humidity>64</humidity>
 </weather>
 </response>

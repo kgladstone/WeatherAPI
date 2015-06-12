@@ -30,9 +30,6 @@
 <link href="css/sticky-footer-navbar.css" rel="stylesheet">
 <link href="css/sitestyle.css" rel="stylesheet">
 		
-<script src="js/sha512.js" type="text/javascript" ></script> 
-<script src="js/forms.js" type="text/javascript" ></script>
-
 <title> Attire Decider </title>
 
 	

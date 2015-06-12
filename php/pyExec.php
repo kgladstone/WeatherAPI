@@ -1,12 +1,14 @@
 <?php 
-$input = $_GET['zip'];
+$zip = $_GET['zip'];
 
 // Replace quotations with escape keys
 #$input = str_replace("\"", "\\\"", $input);
 #echo $input;
 echo shell_exec('cd ..');
-#echo $input;
-$output = shell_exec('java Weather '.$input); 
+
+$output = shell_exec('python Weather.py '.$zip); 
+
+#echo "out: ".$output;
 
 // Replace degrees with symbol
 $output = str_replace("degrees", "&#176", $output);
