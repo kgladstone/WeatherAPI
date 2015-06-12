@@ -9,7 +9,7 @@
 #  * This method conserves HTTP calls and reduces traffic, allowing for
 #  * rapid testing at no risk of disturbing the data source.
 #  * 
-#  * Requires Java Version 8
+#  * Requires Python
 #  * Assume that if XML file exists, it is formatted correctly.
 #  *
 #  * Sample zip codes to test with 
