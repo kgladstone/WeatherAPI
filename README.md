@@ -5,5 +5,7 @@ Using webscraped weather data, app tells user what to wear. Makes use a separate
 
 Goals: use machine learning to adjust to user’s optimal temperature preferences. 
 
+## Weather API
 
+Using this program generates XML files containing weather data for a given zip code in real time. Technically, this takes the form of an API for further use.
 
