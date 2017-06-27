@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<time>2017-06-26T22:31:10.528993</time>
+<weather>
+<town>Bethlehem</town>
+<state>PA</state>
+<zip>18015</zip>
+<temp>70.5</temp>
+<feel>70.5</feel>
+<sky>Clear</sky>
+<rain> 0.00</rain>
+<humidity>51</humidity>
+</weather>
+</response>

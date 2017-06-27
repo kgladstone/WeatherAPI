@@ -21,9 +21,17 @@
 #  * Lahaina, HI : 96761  // for testing different time of day
 #  * Schenectady, NY : 12345 // for interesting zip code
 #  ***************************************************************/
-import urllib
+
 import datetime
 import sys
+
+if sys.version_info[0] == 3:
+    from urllib.request import urlopen
+else:
+    # Not Python 3 - today, it is most likely to be Python 2
+    # But note that this might need an update when Python 4
+    # might be around one day
+    from urllib import urlopen
 
 # Scraping functions
 
@@ -104,9 +112,8 @@ if len(sys.argv) > 1:
 	zip = sys.argv[1]
 
 URL = root + zip
-sock = urllib.urlopen(URL)
-content = sock.read()
-sock.close()
+with urlopen(URL) as url_object:
+    content = str(url_object.read())
 
 # Get items from content of HTML page
 now = str(datetime.datetime.now())
@@ -118,7 +125,6 @@ sky = getSky(header)
 rain = getRain(content)
 humidity = getHumidity(content)
 feel = getFeel(content)
-
 
 # Open the file with writing permission
 filename = "data/" + zip
