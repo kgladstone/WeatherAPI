@@ -1,11 +1,13 @@
 # AttireDecider
-Weather Analyzer -- Now in Python!
+Weather Scraper and Analyzer 
 
-Using webscraped weather data, app tells user what to wear. Makes use of a separate scraper file that would be run on a server at certain predetermined intervals, and the main analyzer file checks the timestamp of the scraped data file before deciding to scrape from the Internet again -- acting as a cache and conserving API calls.
-
-Goals: use machine learning to adjust to user’s optimal temperature preferences. 
+## Description
+Using webscraped weather data, this app tells the user what to wear.
 
 ## Weather API
 
 Using this program generates XML files containing weather data for a given zip code in real time. Technically, this takes the form of an API for further use.
+
+## To Do
+Use machine learning to adjust to user’s optimal temperature preferences. 
 
