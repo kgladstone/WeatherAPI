@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+<time>2017-06-26T22:30:39.994791</time>
+<weather>
+<town>Boston</town>
+<state>MA</state>
+<zip>02118</zip>
+<temp>70.9</temp>
+<feel>70.9</feel>
+<sky>Partly Cloudy</sky>
+<rain> 0.00</rain>
+<humidity>57</humidity>
+</weather>
+</response>
